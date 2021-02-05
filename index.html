@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
+    integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ=="
+    crossorigin="anonymous"
+  />
+  <style>
+    h1 {
+      text-align: center;
+      margin: 1em 0;
+    }
+    label {
+      padding: 13px 15px 13px 0;
+    }
+    td {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+  <title>某垃圾手游输出数值纸面加权</title>
+
+  <div class="container">
+    <h1>某垃圾手游输出数值纸面加权</h1>
+
+    <div class="row">
+      <form class="three columns">
+        <label for="attack">攻击</label>
+        <input name="attack" id="attack" type="number" />
+        <label for="critical_probability">暴击 (%)</label>
+        <input name="critical_probability" id="critical_probability" type="number" />
+        <label for="critical_rate">暴伤 (%)</label>
+        <input name="critical_rate" id="critical_rate" type="number" />
+        <input type="submit" id="calculate" value="算" class="button-primary" />
+      </form>
+
+      <table id="results-simple" class="nine columns">
+        <tr>
+          <th>攻击</th>
+          <th>暴击率</th>
+          <th>暴击伤害</th>
+          <th>暴击输出</th>
+          <th>暴击输出加权</th>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <script>
+    "use strict";
+    let dirty = true;
+    const ATTACK = "attack";
+    const CRITICAL_PROBABILITY = "critical_probability";
+    const CRITICAL_RATE = "critical_rate";
+
+    for (const i of [ATTACK, CRITICAL_PROBABILITY, CRITICAL_RATE]) {
+      const input = document.getElementById(i);
+      input.value = localStorage.getItem(i);
+      input.addEventListener("input", () => {
+        localStorage.setItem(i, input.value);
+        dirty = true;
+      });
+    }
+
+    document.forms[0].addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!dirty) return;
+      dirty = false;
+
+      const attack_value = parseInt(attack.value);
+      const critical_probability_value = parseInt(critical_probability.value) / 100;
+      const critical_rate_value = parseInt(critical_rate.value) / 100;
+
+      if (!attack_value || !critical_probability_value || !critical_rate_value) return;
+
+      const critical = attack_value * critical_rate_value;
+      const paper = attack_value * (critical_probability_value * (critical_rate_value - 1) + 1);
+      // const 针女 = paper + attack_value * critical_probability_value * 1.2 * 0.4;
+
+      const calculations = [attack_value, critical_probability_value, critical_rate_value, critical, paper].map((v) =>
+        v.toFixed(2)
+      );
+
+      const table = document.getElementById("results-simple");
+      const row = table.insertRow();
+      calculations.forEach((c) => (row.insertCell().textContent = c));
+    });
+  </script>
+</html>
