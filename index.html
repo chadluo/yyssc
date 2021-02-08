@@ -20,6 +20,9 @@
       text-align: right;
       font-variant-numeric: tabular-nums;
     }
+    td.highlight {
+      font-weight: bold;
+    }
   </style>
   <title>某垃圾手游输出数值纸面加权</title>
 
@@ -86,6 +89,24 @@
       const table = document.getElementById("results-simple");
       const row = table.insertRow();
       calculations.forEach((c) => (row.insertCell().textContent = c));
+
+      let critical_max = table.rows[1].cells[3];
+      let critical_weighted_max = table.rows[1].cells[4];
+
+      for (let i = 1; i < table.rows.length; i++) {
+        let r = table.rows[i];
+        if (parseFloat(critical_max.innerText) < parseFloat(r.cells[3].innerText)) {
+          critical_max = r.cells[3];
+        }
+        if (parseFloat(critical_weighted_max.innerText) < parseFloat(r.cells[4].innerText)) {
+          critical_weighted_max = r.cells[4];
+        }
+      }
+
+      for (let r of table.rows) for (let c of r.cells) c.classList.remove("highlight");
+
+      critical_max.classList.add("highlight");
+      critical_weighted_max.classList.add("highlight");
     });
   </script>
 </html>
