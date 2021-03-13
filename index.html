@@ -73,7 +73,7 @@
       dirty = false;
 
       const attack_value = parseInt(attack.value);
-      const critical_probability_value = parseInt(critical_probability.value) / 100;
+      const critical_probability_value = Math.min(1, parseInt(critical_probability.value) / 100);
       const critical_rate_value = parseInt(critical_rate.value) / 100;
 
       if (!attack_value || !critical_probability_value || !critical_rate_value) return;
