@@ -67,9 +67,12 @@
     const CRITICAL_PROBABILITY = "critical_probability";
     const CRITICAL_RATE = "critical_rate";
 
+    const CRITICAL_COL = 3;
+    const WEIGHTED_COL = 4;
+
     let dirty = true;
-    let critical_max_index = 0;
-    let critical_weighted_max_index = 0;
+    let critical_max_row = 0;
+    let weighted_max_row = 0;
 
     const dataTable = [];
 
@@ -94,12 +97,11 @@
       if (!attack_value || !critical_probability_value || !critical_rate_value) return;
 
       const critical = (attack_value * critical_rate_value) / 100;
-      const paper = attack_value * ((critical_probability_value / 100) * (critical_rate_value / 100 - 1) + 1);
-      // const 针女 = paper + attack_value * critical_probability_value * 1.2 * 0.4;
+      const weighted = attack_value * ((critical_probability_value / 100) * (critical_rate_value / 100 - 1) + 1);
 
-      dataTable.push([attack_value, critical_probability_value, critical_rate_value, critical, paper]);
-      if (critical > dataTable[critical_max_index][3]) critical_max_index = dataTable.length - 1;
-      if (paper > dataTable[critical_weighted_max_index][4]) critical_weighted_max_index = dataTable.length - 1;
+      dataTable.push([attack_value, critical_probability_value, critical_rate_value, critical, weighted]);
+      if (critical > dataTable[critical_max_row][CRITICAL_COL]) critical_max_row = dataTable.length - 1;
+      if (weighted > dataTable[weighted_max_row][WEIGHTED_COL]) weighted_max_row = dataTable.length - 1;
       draw();
     });
 
@@ -115,7 +117,7 @@
         r.forEach((c, j) => {
           const cell = row.insertCell();
           cell.textContent = j > 2 ? c.toFixed(2) : c;
-          if ((i === critical_max_index && j === 3) || (i === critical_weighted_max_index && j === 4)) {
+          if ((i === critical_max_row && j === CRITICAL_COL) || (i === weighted_max_row && j === WEIGHTED_COL)) {
             cell.classList.add("highlight");
           }
         });
