@@ -51,11 +51,11 @@
       <table id="results-simple"></table>
       <form>
         <label for="attack">攻击</label>
-        <input name="attack" id="attack" type="number" />
+        <input name="attack" id="attack" type="number" step="0.01" />
         <label for="critical_probability">暴击 (%)</label>
-        <input name="critical_probability" id="critical_probability" type="number" />
+        <input name="critical_probability" id="critical_probability" type="number" step="0.01" />
         <label for="critical_rate">暴击伤害 (%)</label>
-        <input name="critical_rate" id="critical_rate" type="number" />
+        <input name="critical_rate" id="critical_rate" type="number" step="0.01" />
         <input type="submit" id="calculate" value="算" class="button-primary" />
       </form>
     </div>
@@ -87,9 +87,9 @@
       if (!dirty) return;
       dirty = false;
 
-      const attack_value = parseInt(attack.value);
-      const critical_probability_value = Math.min(100, parseInt(critical_probability.value));
-      const critical_rate_value = parseInt(critical_rate.value);
+      const attack_value = parseFloat(attack.value);
+      const critical_probability_value = Math.min(100, parseFloat(critical_probability.value));
+      const critical_rate_value = parseFloat(critical_rate.value);
 
       if (!attack_value || !critical_probability_value || !critical_rate_value) return;
 
